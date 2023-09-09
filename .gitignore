@@ -1,0 +1,21 @@
+# Rider specific
+.idea/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Mono / Windows directory
+bin/
+obj/
+
+# Untracked files
+*.pidb
+*.userprefs
