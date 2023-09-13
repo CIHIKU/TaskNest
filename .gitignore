@@ -19,3 +19,6 @@ obj/
 # Untracked files
 *.pidb
 *.userprefs
+
+#ignore sensetive data 
+DockerConfigs/docker-compose.env
