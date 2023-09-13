@@ -1,4 +1,5 @@
-﻿using AuthService.Services;
+﻿using AuthService.GraphQL;
+using AuthService.Services;
 using AuthService.Services.Interfaces;
 using Microsoft.OpenApi.Models;
 
@@ -10,7 +11,10 @@ public static class ConfigureServices
     {
         services.AddSingleton<IRabbitMqPublisherService, RabbitMqPublisherService>();
         services.AddSingleton<IRabbitMqConsumerService, RabbitMqConsumerService>();
-
+        services.AddScoped<AuthServiceQuery>();
+        services.AddScoped<AuthServiceMutation>();
+        services.AddScoped<RefreshTokenResponseType>();
+        
         services.AddControllers();
         
         services.AddEndpointsApiExplorer();

@@ -10,7 +10,7 @@ public class UserModel
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonIgnore]
-    public string Id { get; set; } = string.Empty;
+    public ObjectId Id { get; set; } = ObjectId.GenerateNewId();
     
     [BsonElement("Email")]
     [JsonPropertyName("email")]

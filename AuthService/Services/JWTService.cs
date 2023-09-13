@@ -1,8 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using AuthService.Services.Interfaces;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson;
 
 namespace AuthService.Services;
 
@@ -13,19 +13,19 @@ public class JwtService : IJwtService
 
     public JwtService(int expirationInHours)
     {
-        _secret = Environment.GetEnvironmentVariable("SECRET_KEY");
+        _secret = Environment.GetEnvironmentVariable("SECRET_KEY")!;
         _expirationInHours = expirationInHours;
     }
     
-    public string GenerateToken(string userId, string role)
+    public string GenerateToken(ObjectId userId, string role)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_secret);
+        var key = Encoding.ASCII.GetBytes(_secret!);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[] 
             {
-                new Claim(ClaimTypes.Name, userId),
+                new Claim(ClaimTypes.Name, userId.ToString()!),
                 new Claim(ClaimTypes.Role, role)
             }),
             Expires = DateTime.UtcNow.AddMinutes(_expirationInHours),
@@ -38,7 +38,7 @@ public class JwtService : IJwtService
     public ClaimsPrincipal? ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_secret);
+        var key = Encoding.ASCII.GetBytes(_secret!);
 
         try
         {
