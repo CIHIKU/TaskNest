@@ -8,36 +8,23 @@ namespace AuthService.Tests;
 
 public class TokenUtilityTests
 {
-    private readonly TokenUtility _tokenUtility;
+    private TokenUtility _tokenUtility;
 
-    public TokenUtilityTests()
+    private readonly TokenValidationParameters _tokenValidationParameters = new()
     {
-        var tokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = null,
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-        
-        _tokenUtility = new TokenUtility(tokenValidationParameters, 1);
-    }
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = null,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ClockSkew = TimeSpan.Zero
+    };
 
-    [Fact]
-    public void GenerateToken_ShouldReturnToken()
-    {
-        var encryptedClaims = GetTestEncryptedClaims();
-        var token = _tokenUtility.GenerateToken(encryptedClaims);
-        
-        Assert.NotNull(token);
-        Assert.IsType<string>(token);
-    }
-    
     [Fact]
     public void ValidateToken_WithValidToken_ShouldReturnValidResult()
     {
+        _tokenUtility = new TokenUtility(_tokenValidationParameters, 1);
+        
         var encryptedClaims = GetTestEncryptedClaims();
         var token = _tokenUtility.GenerateToken(encryptedClaims);
         
@@ -45,6 +32,43 @@ public class TokenUtilityTests
         
         Assert.Equal(TokenValidationResult.Valid, result);
         Assert.NotNull(principal);
+    }
+    
+    [Fact]
+    public async Task ValidateToken_WithExpiredToken_ShouldReturnExpiredResult()
+    {
+        // Adjust the expiration time to a very short period for this test
+        _tokenUtility = new TokenUtility(_tokenValidationParameters, -1);
+
+        var encryptedClaims = GetTestEncryptedClaims();
+        var token = _tokenUtility.GenerateToken(encryptedClaims);
+
+        // Wait for the token to expire
+        await Task.Delay(2000);
+
+        var (result, principal) = _tokenUtility.ValidateToken(token);
+    
+        Assert.Equal(TokenValidationResult.Expired, result);
+        Assert.Null(principal);
+    }
+    
+    [Fact]
+    public void ValidateToken_WithInvalidToken_ShouldReturnInvalidResult()
+    {
+        _tokenUtility = new TokenUtility(_tokenValidationParameters, 1);
+
+        // Generate a valid token first
+        var encryptedClaims = GetTestEncryptedClaims();
+        var token = _tokenUtility.GenerateToken(encryptedClaims);
+
+        // Now tamper with the token to make it invalid
+        var invalidToken = token + "tamper";
+
+        // Validate the tampered token
+        var (result, principal) = _tokenUtility.ValidateToken(invalidToken);
+
+        Assert.Equal(TokenValidationResult.Invalid, result);
+        Assert.Null(principal);
     }
     
     private string GetTestEncryptedClaims()

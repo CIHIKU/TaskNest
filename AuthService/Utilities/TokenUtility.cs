@@ -15,8 +15,8 @@ public class TokenUtility : ITokenUtility
     {
         _secretKey = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "MySecretKey_1234MySecretKey_1234";
         
-        _tokenValidationParameters = tokenValidationParameters;
         _expirationInHours = expirationInHours;
+        _tokenValidationParameters = tokenValidationParameters;
         _tokenValidationParameters.IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
     }
 
