@@ -17,7 +17,7 @@ public class Mutation
     public async Task<RefreshTokenResponse> RefreshToken(string refreshToken, string jwtToken)
     {
         // Delegate to the token service to handle the business logic
-        var response = await _tokenService.RefreshTokenAsync(new RefreshTokenRequest { RefreshToken = refreshToken, JwtToken = jwtToken });
+        var response = await _tokenService.RefreshTokenAsync(new RefreshTokenRequest { RefreshToken = refreshToken, JwtToken = jwtToken }, "");
         return response;
     }
 }
