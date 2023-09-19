@@ -10,13 +10,20 @@
       <PackageReference Include="GraphQL" Version="7.6.1" />
       <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="7.6.0" />
       <PackageReference Include="GraphQL.Server.Ui.Playground" Version="7.6.0" />
+      <PackageReference Include="Isopoh.Cryptography.Argon2" Version="2.0.0" />
+      <PackageReference Include="Moq" Version="4.20.69" />
       <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.0-preview5" />
+      <PackageReference Include="xunit" Version="2.5.1-pre.33" />
 
         
       <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
         
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Utilities\Token\" />
     </ItemGroup>
     
 

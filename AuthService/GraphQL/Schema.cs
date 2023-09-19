@@ -31,6 +31,8 @@ public class AuthServiceMutation : ObjectGraphType
     
     private void Initialize(ITokenService tokenService)
     {
+        var ipAddress = "";
+        
         Field<RefreshTokenResponseType>("refreshToken")
             .Name("refreshToken")
             .Argument<NonNullGraphType<StringGraphType>>("refreshToken")
@@ -41,7 +43,7 @@ public class AuthServiceMutation : ObjectGraphType
                 var jwtToken = context.GetArgument<string>("jwtToken");
 
                 // Here, call your service to handle the token refresh
-                var response = await tokenService.RefreshTokenAsync(new RefreshTokenRequest { RefreshToken = refreshToken, JwtToken = jwtToken });
+                var response = await tokenService.RefreshTokenAsync(new RefreshTokenRequest { RefreshToken = refreshToken, JwtToken = jwtToken }, ipAddress);
 
                 return response;
             });

@@ -19,8 +19,10 @@ public class TokenController : ControllerBase
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest request)
     {
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        
         // Delegate to the token service to handle the business logic
-        var response = await _tokenService.RefreshTokenAsync(request);
+        var response = await _tokenService.RefreshTokenAsync(request, ipAddress);
         return Ok(response);
     }
     
@@ -33,4 +35,9 @@ public class TokenController : ControllerBase
         // No need to invalidate the JWT as it will expire on its own
         return Ok(new { Message = "You have logged out successfully" });
     }
+}
+
+public class LogoutRequest
+{
+    public string RefreshToken { get; set; }
 }
